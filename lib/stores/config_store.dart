@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/l10n.dart';
@@ -60,6 +61,10 @@ abstract class _ConfigStore with Store {
   @observable
   @JsonKey(defaultValue: true)
   bool showScores = true;
+
+  @observable
+  @JsonKey(defaultValue: "")
+  String downloadPath = "";
 
   // default is set in fromJson
   @observable
