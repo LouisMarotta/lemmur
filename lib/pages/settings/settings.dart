@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as p;
 
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
@@ -43,6 +47,13 @@ class SettingsPage extends HookWidget {
             title: const Text('Accounts'),
             onTap: () {
               goTo(context, (_) => AccountsConfigPage());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.download),
+            title: const Text('Downloads'),
+            onTap: () {
+              goTo(context, (_) => const DownloadManagerPage());
             },
           ),
           if (hasAnyUsers)
@@ -171,6 +182,64 @@ class GeneralConfigPage extends StatelessWidget {
                   },
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Download manager settings
+class DownloadManagerPage extends StatelessWidget {
+  const DownloadManagerPage();
+
+  @override
+  Widget build(BuildContext context) {
+    String? selectedDirectory = "";
+    return Scaffold(
+      appBar: AppBar(title: const Text('Downloads')),
+      body: ObserverBuilder<ConfigStore>(
+        builder: (context, store) => ListView(
+          children: [
+            ListTile(
+              title: const Text(
+                'Folder location',
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.visible,
+              ),
+              subtitle: Text(
+                maxLines: 1,
+                store.downloadPath,
+                overflow: TextOverflow.clip,
+                style: TextStyle(
+                    color: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        ?.color
+                        ?.withOpacity(0.7)),
+              ),
+              onTap: () async {
+                selectedDirectory =
+                    await FilePicker.platform.getDirectoryPath();
+                if (selectedDirectory == null) {
+                  log("Couldn't select directory");
+                } else {
+                  store.downloadPath = selectedDirectory!;
+                  log(store.downloadPath);
+
+                  //Make separate utility to prettify
+                  log(p.split(store.downloadPath).toString());
+                }
+              },
+            ),
+            const _SectionHeading('Advanced Settings'),
+            //Not yet implemented
+            const SwitchListTile.adaptive(
+              title: Text('Use community folders'),
+              value: false,
+              onChanged: null,
             ),
           ],
         ),
