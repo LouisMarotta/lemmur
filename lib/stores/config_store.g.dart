@@ -13,6 +13,7 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
   ..showAvatars = json['showAvatars'] as bool? ?? true
   ..showScores = json['showScores'] as bool? ?? true
+  ..downloadPath = json['downloadPath'] as String? ?? ''
   ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
   ..defaultListingType =
       _postListingTypeFromJson(json['defaultListingType'] as String?);
@@ -24,6 +25,7 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'locale': const LocaleConverter().toJson(instance.locale),
       'showAvatars': instance.showAvatars,
       'showScores': instance.showScores,
+      'downloadPath': instance.downloadPath,
       'defaultSortType': instance.defaultSortType,
       'defaultListingType': instance.defaultListingType,
     };
@@ -119,6 +121,22 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
+  late final _$downloadPathAtom =
+      Atom(name: '_ConfigStore.downloadPath', context: context);
+
+  @override
+  String get downloadPath {
+    _$downloadPathAtom.reportRead();
+    return super.downloadPath;
+  }
+
+  @override
+  set downloadPath(String value) {
+    _$downloadPathAtom.reportWrite(value, super.downloadPath, () {
+      super.downloadPath = value;
+    });
+  }
+
   late final _$defaultSortTypeAtom =
       Atom(name: '_ConfigStore.defaultSortType', context: context);
 
@@ -182,6 +200,7 @@ amoledDarkMode: ${amoledDarkMode},
 locale: ${locale},
 showAvatars: ${showAvatars},
 showScores: ${showScores},
+downloadPath: ${downloadPath},
 defaultSortType: ${defaultSortType},
 defaultListingType: ${defaultListingType}
     ''';
