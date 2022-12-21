@@ -3,6 +3,7 @@
   package="com.krawieck.lemmur">
 
   <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <!-- Needed for url_launcher to work on android 11 -->
   <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
