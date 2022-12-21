@@ -3,6 +3,7 @@ import 'dart:math' show max, min;
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_download_manager/flutter_download_manager.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:photo_view/photo_view.dart';
@@ -10,6 +11,10 @@ import 'package:photo_view/photo_view.dart';
 import '../util/icons.dart';
 import '../util/share.dart';
 import '../widgets/bottom_modal.dart';
+
+//Just putting this here temporarily
+import '../stores/config_store.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// View to interact with a media object. Zoom in/out, download, share, etc.
 class MediaViewPage extends HookWidget {
@@ -84,7 +89,13 @@ class MediaViewPage extends HookWidget {
                 IconButton(
                   icon: const Icon(Icons.file_download),
                   tooltip: 'download',
-                  onPressed: notImplemented,
+                  onPressed: () async {
+                    final sharedPrefs = await SharedPreferences.getInstance();
+                    final path = ConfigStore.load(sharedPrefs).downloadPath;
+
+                    final dlManager = DownloadManager();
+                    await dlManager.addDownload(url, path);
+                  },
                 ),
               ],
             )
